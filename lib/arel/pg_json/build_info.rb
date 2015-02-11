@@ -35,11 +35,11 @@ module Arel
       end
 
       def summary
-        %q{TODO: Write a short summary. Required.}
+        %q{Arel nodes and vistor methods for Postgres Json datatype}
       end
 
       def description
-        %q{TODO: Write a longer description. Optional.}
+        %q{Arel nodes and vistor methods for Postgres Json datatype}
       end
 
       def files
