@@ -3,26 +3,25 @@ module Arel
     module PgJson
       private
 
-      def visit_Arel_Nodes_JsonDashArrow o, collector
-        json_infix o, collector, ' -> '
+      def visit_Arel_Nodes_JsonDashArrow o, a
+        json_infix o, a, ' -> '
       end
 
-      def visit_Arel_Nodes_JsonDashDoubleArrow o, collector
-        json_infix o, collector, ' ->> '
+      def visit_Arel_Nodes_JsonDashDoubleArrow o, a
+        json_infix o, a, ' ->> '
       end
 
-      def visit_Arel_Nodes_JsonHashArrow o, collector
-        json_infix o, collector, ' #> '
+      def visit_Arel_Nodes_JsonHashArrow o, a
+        json_infix o, a, ' #> '
       end
 
-      def visit_Arel_Nodes_JsonHashDoubleArrow o, collector
-        json_infix o, collector, ' #>> '
+      def visit_Arel_Nodes_JsonHashDoubleArrow o, a
+        json_infix o, a, ' #>> '
       end
 
-      def json_infix(o, collector, opr)
-        collector = visit o.left, collector
-        collector << opr
-        visit o.right, collector
+      def json_infix(o, a, opr)
+        a = o.left if Arel::Attributes::Attribute === o.left
+        visit(o.left, a).concat(opr).concat(visit(o.right, a))
       end
     end
 
