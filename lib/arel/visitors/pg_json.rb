@@ -19,6 +19,12 @@ module Arel
         json_infix o, a, ' #>> '
       end
 
+      def visit_Arel_Nodes_JsonbAtArrow o, a
+        json_infix o, a, ' @> '
+      end
+
+
+
       def json_infix(o, a, opr)
         a = o.left if Arel::Attributes::Attribute === o.left
         visit(o.left, a).concat(opr).concat(visit(o.right, a))
