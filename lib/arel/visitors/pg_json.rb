@@ -4,9 +4,18 @@ module Arel
       private
 
       def visit_Arel_Nodes_CastJson o, collector
-        collector << 'CAST( '
-        collector = visit(o.left, collector)
-        collector << " AS #{o.right} )"
+        if !collector.respond_to?('<<') # for arel < 6.0.0
+          return visit(o.left, collector)
+            .prepend('CAST(')
+            .concat(' AS ')
+            .concat(o.right)
+            .concat(?))
+        else
+          collector << 'CAST('
+          collector = visit(o.left, collector)
+          collector << " AS #{o.right})"
+        end
+        collector
       end
 
       def visit_Arel_Nodes_JsonDashArrow o, a
@@ -46,11 +55,10 @@ module Arel
       end
 
       def json_infix(o, a, opr)
-        # a = o.left if Arel::Attributes::Attribute === o.left
         visit(Nodes::InfixOperation.new(opr, o.left, o.right), a)
       end
     end
-    puts 'including PgJson in PostgreSQL'
+
     PostgreSQL.send :include, PgJson
   end
 end

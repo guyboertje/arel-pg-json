@@ -23,7 +23,7 @@ module Arel
       private
 
       def version
-        '0.0.6'
+        '0.0.9'
       end
 
       def authors

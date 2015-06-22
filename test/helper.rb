@@ -4,6 +4,16 @@ $:.unshift File.expand_path(File.dirname(__FILE__))
 require 'arel_pg_json'
 require 'minitest/autorun'
 
+if !Arel::Nodes.respond_to?(:build_quoted)
+  module Arel
+    module Nodes
+      def self.build_quoted(val)
+        SqlLiteral.new(val.prepend(?').concat(?'))
+      end
+    end
+  end
+end
+
 require 'support/fake_record'
 Arel::Table.engine = FakeRecord::Base.new
 
@@ -29,7 +39,11 @@ def it_behaves_like(desc, *args, &block)
 end
 
 def compile node
-  PgVisitor.accept(node, Arel::Collectors::SQLString.new).value
+  if defined?(Arel::Collectors)
+    PgVisitor.accept(node, Arel::Collectors::SQLString.new).value
+  else
+    PgVisitor.accept(node)
+  end
 end
 
 def field_for(str)
@@ -39,4 +53,3 @@ end
 def equality_wrap(left, right)
    Arel::Nodes::Equality.new(left, Arel::Nodes.build_quoted(right))
 end
-# Arel::Collectors::SQLString.new Collector.new

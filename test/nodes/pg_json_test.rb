@@ -69,10 +69,11 @@ module Arel
 
       it_behaves_like 'A Binary Node', CastJson do |node|
         it "#{node} generates some sql" do
+          expected = %{CAST("foobars"."jdata" ->> 'age' AS int8) BETWEEN 18 AND 30}
           inner = JsonDashDoubleArrow.new(field_for(:jdata), Nodes.build_quoted('age'))
           sut = node.new(inner, SqlLiteral.new('int8'))
-          outer = Between.new(sut, [18, 30])
-          expect(compile(outer)).must_equal(%{CAST( "foobars"."jdata" ->> 'age' AS int8 ) BETWEEN 18, 30})
+          outer = Between.new(sut, And.new([18, 30]))
+          expect(compile(outer)).must_equal(expected)
         end
       end
 
