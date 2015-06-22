@@ -7,6 +7,7 @@ module Arel
       JsonHashDoubleArrow
       JsonbAtArrow
       JsonbArrowAt
+      JsonbQuestion
       JsonbQuestionAnd
       JsonbQuestionOr
       CastJson
@@ -17,6 +18,8 @@ module Arel
 end
 
 =begin
+
+Arel::Nodes::JsonDashArrow
 
 support for CAST("table"."json_data" ->> 'start_i' AS int8) between 1428926200 AND 1428926600
 will be
