@@ -8,7 +8,7 @@ if !Arel::Nodes.respond_to?(:build_quoted)
   module Arel
     module Nodes
       def self.build_quoted(val)
-        SqlLiteral.new(val.prepend(?').concat(?'))
+        SqlLiteral.new("'#{val}'")
       end
     end
   end
@@ -39,7 +39,7 @@ def it_behaves_like(desc, *args, &block)
 end
 
 def compile node
-  if defined?(Arel::Collectors)
+  if defined?(Arel::Collectors::SQLString)
     PgVisitor.accept(node, Arel::Collectors::SQLString.new).value
   else
     PgVisitor.accept(node)
